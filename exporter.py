@@ -1109,6 +1109,7 @@ def get_game_details(data):
 
 if __name__ == '__main__':
     logging.basicConfig(filename='exporter.log', format='%(asctime)s %(message)s', level=logging.INFO)
+    # Manager() 返回的 manager 对象控制了一个server进程，此进程包含的python对象可以被其他的进程通过proxies来访问，而达到多进程间数据通信且安全。
     manager = Manager()
     current_tasks = manager.Value('i', 0)
     movie_states = manager.dict()
@@ -1120,10 +1121,20 @@ if __name__ == '__main__':
     music_lock = manager.Lock()
     book_lock = manager.Lock()
     game_lock = manager.Lock()
-    states = {"movie": movie_states, "music": music_states, "book": book_states, "game": game_states}
-    locks = {"movie": movie_lock, "music": music_lock, "book": book_lock, "game": game_lock}
+    states = {
+        "movie": movie_states,
+        "music": music_states,
+        "book": book_states,
+        "game": game_states
+    }
+    locks = {
+        "movie": movie_lock,
+        "music": music_lock,
+        "book": book_lock,
+        "game": game_lock
+    }
     BIDS = gen_bids()
     clear_files()
     if CUSTOM_COOKIE:
         logging.info('Custom cookies detected')
-    app.run('0.0.0.0', 8000)
+    app.run('0.0.0.0', 8000, debug=True)
